@@ -353,7 +353,7 @@ We now formulate some properties for an optimal instant for FPTS based on the ta
 		All minimal	preempting and delaying tasks experience a maximal activation delay at their respective simultaneous activation, and a minimal activation delay at previous activations.
 		
 		\item \textbf{Activation delays for extra preempting tasks.}
-		Given that an extra preempting task $\tau_e$ preempts $\eta_e$ times to job $\iota_{i,k^{\rm{br}}}$, task $\tau_e$ experiences a maximal activation delay $\alpha_e \in [0,\aj_e]$ at the moment of its simultaneous activation preserving the number of preemptions $\eta_e$. Furthermore, activations before $s_{i,k^{\rm{br}}}$ and in the interval $(s_{i,k^{\rm{br}}}+\Delta, f_{i,k^{\rm{br}}})$ experience a minimal activation delay.
+		Given that an extra preempting task $\tau_e$ preempts $\eta_e$ times to job $\iota_{i,k^{\rm{br}}}$, task $\tau_e$ experiences a maximal activation delay in the range $[0,\aj_e]$ at the moment of its simultaneous activation preserving the number of preemptions $\eta_e$. Furthermore, activations before $s_{i,k^{\rm{br}}}$ and in the interval $(s_{i,k^{\rm{br}}}+\Delta, f_{i,k^{\rm{br}}})$ experience a minimal activation delay.
 	\end{itemize}
 
 \end{theorem}
@@ -468,11 +468,13 @@ Note that the hold time of job $k^{\rm{br}}$ is needed to determine the relative
 
 \fi
 
-\subsection{The activation delay of extra preempting tasks}
+\subsection{The activation delay of higher priority tasks}
 
-
-
-As stated in Theorem \ref{thm:optimal_instant_fpts}, the maximal activation delay $\alpha_e\in [0,\aj_e]$ of an extra preempting task $\tau_e$ at the moment of its simultaneous activation is constrained by the number of times $\eta_e$ that preempts to the job with a best-case response time. Therefore, it is necessary to first determine the number of preemptions for each of the extra preempting tasks to derive their activation delays. To this end, we first introduce the notion of \textit{preemption vector} as follows.
+Recall from Theorem \ref{thm:optimal_instant_fpts} that the activation delay $\alpha_j$ of a minimal preempting or a delaying task $\tau_j$ is maximal at the moment of its simultaneous activation; hence, it holds that
+\begin{align}\label{eqn:activation_delay_minimal_delaying}
+	\alpha_j = \aj_j \hspace{.6cm} \textnormal{for all $\tau_j \in \mathpzc{M}_i \cup \mathpzc{D}_i$}.
+\end{align}
+Furthermore, the maximal activation delay of an extra preempting task $\tau_e$ at the moment of its simultaneous activation is constrained by the number of times $\eta_e$ that preempts to the job with a best-case response time; moreover, this activation delay is in the range $[0,\aj_e]$. Therefore, it is necessary to first determine the number of preemptions for each of the extra preempting tasks to derive their activation delays. To this end, we first introduce the notion of \textit{preemption vector} as follows.
 
 \begin{definition}
 	\textit{Preemption vector}.
@@ -489,7 +491,7 @@ Let $\iota_{i,k^{\rm{opt}}}$ be a job of $\tau_i$ that experiences the propertie
 \end{corollary}
 
 
-Figure \ref{fig:alpha_e} shows and example of the activation delay for an arbitrary extra preempting task $\tau_e$. Note that the first job of $\tau_e$ is activated in the middle of its activation interval at a time $t=s_{i,k^{\rm{opt}}}+\Delta$ resulting in $\alpha_e < \aj_e$. Furthermore, note that $\alpha_e$ cannot increase because $\eta_e = 3$. Increasing $\alpha_e$ would result in an additional preemption by the last job of $\tau_e$ in job $\iota_{i,k^{\rm{opt}}}$; hence, violating the constraint of $\eta_e = 3$. We now derive a corollary to determine the maximal activation delay of extra preempting tasks as follow.
+Figure \ref{fig:alpha_e} shows and example of the activation delay $\alpha_e$ for an arbitrary extra preempting task $\tau_e$. Note that the first job of $\tau_e$ is activated in the middle of its activation interval at a time $t=s_{i,k^{\rm{opt}}}+\Delta$ resulting in $\alpha_e < \aj_e$. Furthermore, note that $\alpha_e$ cannot increase because $\eta_e = 3$. Increasing $\alpha_e$ would result in an additional preemption by the last job of $\tau_e$ in job $\iota_{i,k^{\rm{opt}}}$; hence, violating the constraint of $\eta_e = 3$. We now derive a corollary to determine the maximal activation delay of extra preempting tasks as follow.
 
 \begin{figure}[h]
 	\centering
@@ -501,15 +503,22 @@ Figure \ref{fig:alpha_e} shows and example of the activation delay for an arbitr
 
 \begin{corollary}\label{cor:activation_delay_formula}
 	Let $\iota_{i,k^{\rm{opt}}}$ be a job of $\tau_i$ that experiences the properties for an optimal instant and let $\vec{\eta}$ be its corresponding preemption vector. Furthermore, let $\tau_e$ be an extra preempting task of such a job. The maximal activation delay $\alpha_e(\vec{\eta},\Delta)$ of the job of $\tau_e$ activated at time $t = s_{i,k^{\rm{opt}}}+\Delta$ is given by
-	\begin{align} \label{eqn:alpha_e}
-		\alpha_e(\vec{\eta},\Delta) = \min(T_e \cdot \eta_e + \aj_e + \Delta - h_i(\vec{\eta}), \aj_e)^+.
+	\begin{align} \label{eqn:activation_delay_formula}
+		\alpha_e(\vec{\eta},\Delta) = \min(T_e \cdot \eta_e + \aj_e + \Delta - h_i(\vec{\eta}), \aj_e)^+ \hspace{.6cm} \textnormal{for all $\tau_e \in \mathpzc{E}_i$}.
 	\end{align}
 \end{corollary}
 
-Note that the outer $\min$ and superscript $(+)$ operator in Equation (\ref{eqn:alpha_e}) keep $\alpha_e(\vec{\eta},\Delta)$ within the range $[0,\aj_e]$. Furthermore, the term $T_e \cdot \eta_e + \aj_e$ is the time length from the start of the activation interval of the job of $\tau_e$ activated just after $\iota_{i,k^{\rm{opt}}}$ starts and the end of the activation interval of the first job of $\tau_e$ that is activated at $t \geq f_{i,k^{\rm{opt}}}$. Figure \ref{fig:alpha_e} depicts this situation.
+The outer $\min$ and superscript $(+)$ operator in Equation (\ref{eqn:activation_delay_formula}) keep $\alpha_e(\vec{\eta},\Delta)$ within the range $[0,\aj_e]$. Furthermore, the term $T_e \cdot \eta_e + \aj_e$ is the time length from the start of the activation interval of the job of $\tau_e$ activated just after $\iota_{i,k^{\rm{opt}}}$ starts and the end of the activation interval of the first job of $\tau_e$ that is activated at $t \geq f_{i,k^{\rm{opt}}}$. Figure \ref{fig:alpha_e} depicts this situation. Combining Equations (\ref{eqn:activation_delay_minimal_delaying}) and (\ref{eqn:activation_delay_formula}), we derive a more general formula for the activation delay of higher priority tasks as follows.
+\begin{align} \label{eqn:activation_delay}
+	\alpha_j(\vec{\eta},\Delta) = \begin{cases} 
+	\min(T_j \cdot \eta_j + \aj_j + \Delta - h_i(\vec{\eta}), \aj_j)^+ & \text{for all} \hspace{3mm} \tau_j \in \mathpzc{E}_i\\
+	\aj_j & \text{for all} \hspace{3mm} \tau_j \in \mathpzc{M}_i \cup \mathpzc{D}_i
+	\end{cases}
+\end{align}
 
 
-\section{Determining the vector of preemptions of a job}\label{sec:hold_times_of_a_job}
+\section{Determining the preemption vectors of a job}\label{sec:hold_times_of_a_job}
+\iffalse
 From Corollary \ref{cor:activation_delay_formula}, we have to determine first the preemption vector of a job that assumes the best-case response time in order to determine the activation delays of its extra preempting tasks and subsequently construct an optimal instant. Note that this job does not necessarily has a preemption vector that leads to the shortest hold time (Fact \ref{cor:shortest_hold_time}). Hence, we propose to explore all possible preemption vectors of a job experiencing an optimal instant in order to determine the one that leads to the best-case response time.
 
 In this section, we first show how to determine the maximum and minimum possible preemption vectors of a job given a set of extra preempting tasks. In case these vectors result to be different, we compute the preemption vectors falling in between.
@@ -675,55 +684,56 @@ As an example, consider again the set of tasks $\mathpzc{T}_\ref{tab:ex_hold_tim
 	\label{fig:intermediate_hold_time}
 \end{figure}
 
+\fi
 \iftrue
 \section{Exact best-case response time analysis}
-In this chapter, we present and prove a novel exact best-case response time analysis for independent real-time periodic tasks with arbitrary deadlines scheduled using FPTS. Our analysis is based on the properties for an optimal instant presented in Theorem \ref{thm:optimal_instant_fpts}. More precisely, we construct an instant with such properties for all possible partitions of preempting tasks into sets of extra and minimal preempting tasks. For each set of extra preempting tasks of a task $\tau_i$, we first determine the vector of preemptions $\vec{\eta}$ of a job $\iota_{i,k}$ of $\tau_i$ when experiencing such extra preemptions. Based on such a vector, we can now construct an instant with the properties for an optimal instant and subsequently derive its shortest response time. Afterwards, the best-case response time is simply determined by the minimum of all shortest response times that were explored.
+In this chapter, we present and prove a novel exact best-case response time analysis for independent real-time periodic tasks with arbitrary deadlines scheduled using FPTS. Our analysis is based on the properties for an optimal instant presented in Theorem \ref{thm:optimal_instant_fpts}. More precisely, we first partition the set of preempting tasks into the sets of extra and minimal preempting tasks. For each set of extra preempting tasks of a task $\tau_i$, we determine the preemption vector $\vec{\eta}$ of a job $\iota_{i,k^{\rm{opt}}}$ that experiences the properties for an optimal instant and subsequently derive its shortest response time. Afterwards, the best-case response time is simply determined by the minimum of all shortest response times for all partitions of preempting tasks.
 
 \subsection{Best-case interval for the execution of a task $\tau_i$}
 
 Similar to the best-case response time analysis with arbitrary deadlines for FPPS, a job of a task $\tau_i$ scheduled using FPTS and experiencing its optimal instant may still experience interference by its previous jobs provoking a delay on its start time (see Figure \ref{fig:example_1}). Therefore, we have to look to previous jobs of $\tau_i$ to determine its shortest response time. In order to do so,  we have to determine intervals of minimal length with enough processing time to execute complete jobs of $\tau_i$.
 
 \begin{definition}\label{def:gen_best_interval}
-	Given a job $\iota_{i,k}$ of a task $\tau_i$ with a vector of preemptions $\vec{\eta} \in \hlt_i(\mathpzc{E_i})$, where $\mathpzc{E_i}$ is a set of extra preempting tasks, the \textit{generalized best-case interval} $GI_i(y, \vec{\eta}, \mathpzc{E_i})$ is defined as the length of the shortest interval $[t_s,t_e)$ before the completion of $\iota_{i,k}$, i.e. $t_e = f_{i,k}$, in which exactly an amount of time $y \in \mathbb{R}^+$ is available for the execution of task $\tau_i$.
+	Let $\iota_{i,k}$ be a job of a task $\tau_i$ that experiences the properties for an optimal instant. Furthermore, let $\vec{\eta} \in \hlt_i(\mathpzc{E_i})$ be its corresponding preemption vector, where $\mathpzc{E_i}$ is a set of extra preempting tasks of $\tau_i$. The \textit{generalized best-case interval} $GI_i(y, \vec{\eta}, \mathpzc{E_i})$ is defined as the length of the shortest interval $[t_s,t_e)$ before the completion of $\iota_{i,k}$, i.e. $t_e = f_{i,k}$, in which exactly an amount of time $y \in \mathbb{R}^+$ is available for the execution of task $\tau_i$.
 \end{definition}
 
-Note that $GI_i(y, \vec{\eta},  \mathpzc{E_i})$ is similar to the notion of {best-case interval} $BI_i(y)$ given in \cite{BLM13}. The main difference is that, for $GI_i(y, \vec{\eta},  \mathpzc{E_i})$, it is considered that the interval ends with a job $\iota_{i,k}$ with a vector of preemptions $\vec{\eta}$. It is necessary to specify the vector of preemptions of $\iota_{i,k}$ for two reasons. First, to derive the hold time $H_{i,k}$ and consequently derive the phasing at which extra preempting and delaying tasks must be activated (see Section \ref{sec:phasing_delaying_extra}). Second, to determine the activation delays of extra preempting tasks. We propose the following theorem for $GI_i(y, \vec{\eta},  \mathpzc{E_i})$.
+Note that $GI_i(y, \vec{\eta},  \mathpzc{E_i})$ is similar to the notion of {best-case interval} $BI_i(y)$ given in \cite{BLM13}. The main difference is that, for $GI_i(y, \vec{\eta},  \mathpzc{E_i})$, it is considered that the interval ends with a job $\iota_{i,k}$ with a preemption vector $\vec{\eta}$. It is necessary to specify the preemption vector of $\iota_{i,k}$ in order to derive its hold time $H_{i,k}=h_i(\vec{\eta})$ and to determine the activation delays of its extra preempting tasks. We propose the following theorem for $GI_i(y, \vec{\eta},  \mathpzc{E_i})$.
 
 \begin{theorem}
 	The \textit{generalized best-case interval} $GI_i(y, \vec{\eta},  \mathpzc{E_i})$ is given by the largest $x \in \mathbb{R}^+$ satisfying
 	\begin{align} \label{eq:g_best_interval}
 	\begin{split}
-	x = &y + \sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{x-\aj_m}{T_m}\Big\rceil -1 \Big)^+  BC_m + \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{x-h(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon+ \beta_E
+	x = &y + \sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{x-\alpha_m(\vec{\eta})}{T_m}\Big\rceil -1 \Big)^+  BC_m + \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{x-h(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon+ \beta_E(\vec{\eta})
 	\end{split} 
 		\end{align}
-	where $h$ is the hold-time of the job $\iota_{i,k}$ with the vector of preemptions $\vec{\eta}$, i.e. $h(\vec{\eta})=\bc_i + \sum\limits_{p:\tau_p \in \mathpzc{P}_i} \eta_p \cdot \bc_p$. Furthermore,  $\beta_E$ is the amount of preemptions by extra preempting tasks in such a hold-time, i.e. $\beta_E = \sum\limits_{e:\tau_e \in \mathpzc{E}_i} \eta_e \cdot \bc_e$.
+	where $\beta_E$ is the amount of time that extra preempting tasks preempts to $\iota_{i,k}$, i.e. $\beta_E(\vec{\eta}) = \sum\limits_{e:\tau_e \in \mathpzc{E}_i} \eta_e \cdot \bc_e$. Furthermore, $\alpha_j(\vec{\eta})$ is a shorthand notation for $\alpha_j(\vec{\eta},0)$.
 \end{theorem}
 
 \begin{proof}
 	The general best-case interval $GI_i(y, \vec{\eta},\mathpzc{E}_i)$ consists of two parts: the amount of time $y\in \mathbb{R^+}$ that corresponds to the first term in the RHS of Equation (\ref{eq:g_best_interval}), and the interference that higher priority tasks induce in the interval $ [t_s,t_e) $ of length $GI_i(y, \vec{\eta},\mathpzc{E}_i)$. Since the set $\mathpzc{M_i}$ contains the minimal preempting tasks of $\tau_i$, their influence on the interval $[t_s,t_e)$ must be minimal, and it is obtained when there is a simultaneous activation of all minimal preempting tasks at time $t_e$ with maximal activation delay. Therefore, the shortest amount of time reserved for minimal preempting tasks in the interval is given by 
 	\begin{align*}
-	\sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{t_e-t_s-\aj_m}{T_m}\Big\rceil -1 \Big)^+  \bc_m  = 	\sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-\aj_m}{T_m}\Big\rceil -1 \Big)^+  \bc_m.
+	\sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{t_e-t_s-\aj_m}{T_m}\Big\rceil -1 \Big)^+  \bc_m  = 	\sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-\alpha_m(\vec{\eta})}{T_m}\Big\rceil -1 \Big)^+  \bc_m.
 	\end{align*}
 	This corresponds to the second term in Equation (\ref{eq:g_best_interval}).
 	
 	
-	Note that Definition \ref{def:gen_best_interval} assumes that a job $\iota_{i,k}$ of task $\tau_i$ with a preemption vector $\vec{\eta}$ executes at the end of $[t_s,t_e)$, i.e. $f_{i,k}=t_e$ and $s_{i,k} = t_e - h(\vec{\eta})$. The amount of time reserved for extra preempting tasks in the interval $[s_{i,k},t_e)$ of size $h(\vec{\eta})$ is given by the number of extra preempting jobs that execute in such an interval; hence, it is given by $\beta_E$. This corresponds to the last term in the RHS of Equation (\ref{eq:g_best_interval}). On the other hand, delaying tasks cannot preempt $\tau_i$; hence, there is no time reserved for delaying tasks in $[s_{i,k},t_e)$. It only remains to determine the amount of interference by extra preempting and delaying tasks in the interval $[t_s,s_{i,k})$.
+	Note that Definition \ref{def:gen_best_interval} assumes that a job $\iota_{i,k}$ of task $\tau_i$ with a preemption vector $\vec{\eta}$ executes at the end of $[t_s,t_e)$, i.e. $f_{i,k}=t_e$ and $s_{i,k} = t_e - h(\vec{\eta})$. The amount of time reserved for extra preempting tasks in the interval $[s_{i,k},t_e)$ of size $h(\vec{\eta})$ is given by the number of extra preempting jobs that execute in such an interval; hence, it is given by $\beta_E(\vec{\eta})$. This corresponds to the last term in the RHS of Equation (\ref{eq:g_best_interval}). On the other hand, delaying tasks cannot preempt $\tau_i$; hence, there is no time reserved for delaying tasks in $[s_{i,k},t_e)$. It only remains to determine the amount of interference by extra preempting and delaying tasks in the interval $[t_s,s_{i,k})$.
 	
 	
-	From the properties for an optimal instant given in Theorem \ref{thm:optimal_instant_fpts}, a simultaneous activation of delaying and extra preempting tasks occurs at time $t= s_{i,k}+\Delta$. Furthermore, the activation delay of delaying and extra preempting tasks at that time has to be maximal while preserving the vector of preemptions $\vec{\eta}$ for $\iota_{i,k}$, i.e. the activation delay of a task $\tau_{\epsilon}$ is given by $\alpha_\epsilon(\vec{\eta})$. Note that delaying tasks activated before $s_{i,k}$ have to be completed before $s_{i,k}$ as well. If not, job $\iota_{i,k}$ would not be able to start at that time. Hence, all jobs of delaying tasks activated in the interval $[t_s,s_{i,k})$ will give rise to interference in such an interval. The amount of processing time spent on the execution of delaying and extra preempting tasks in $[t_s,s_{i,k})$ is therefore given by
+	From the properties for an optimal instant given in Theorem \ref{thm:optimal_instant_fpts}, a simultaneous activation of delaying and extra preempting tasks occurs at time $t= s_{i,k}+\Delta$. Furthermore, the activation delay of delaying and extra preempting tasks at that time has to be maximal while preserving the preemption vector $\vec{\eta}$ for $\iota_{i,k}$, i.e. the activation delay of a task $\tau_{\epsilon}\in \mathpzc{E}_i \cup \mathpzc{D}_i$ is given by $\alpha_\epsilon(\vec{\eta},\Delta)$. Note that delaying tasks activated before $s_{i,k}$ have to be completed before $s_{i,k}$ as well. If not, job $\iota_{i,k}$ would not be able to start at that time. Hence, all jobs of delaying tasks activated in the interval $[t_s,s_{i,k})$ will give rise to interference in such an interval. The amount of processing time spent on the execution of delaying and extra preempting tasks in $[t_s,s_{i,k})$ is therefore given by
 	\begin{align*}
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{(s_{i,k}+\Delta)-t_s-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{t_e -h(\vec{\eta})+\Delta-t_s-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta- \alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{(s_{i,k}+\Delta)-t_s-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{t_e -h(\vec{\eta})+\Delta-t_s-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta- \alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
 	\end{align*}
 	Given Lemma \ref{lemma:auxilary1} in the Appendix, when $\Delta$ approaches zero the equation is simplified as follows.
 	\begin{align*}
-	\lim \limits_{\Delta \downarrow 0} & \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
+	\lim \limits_{\Delta \downarrow 0} & \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
 	= \\
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \lim \limits_{\Delta \downarrow 0}  \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \lim \limits_{\Delta \downarrow 0}  \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
 	= \\
 	& \{ \text{Lemma \ref{lemma:auxilary1}} \} \\ 
-	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor \lim \limits_{\Delta \downarrow 0}  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon
+	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor \lim \limits_{\Delta \downarrow 0}  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rfloor^+  BC_\epsilon
 	= \\
 	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon.
 	\end{align*}
