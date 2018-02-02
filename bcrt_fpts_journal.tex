@@ -230,7 +230,7 @@ UPDATE THIS WITH NEW EXAMPLES CONSIDERING JITTER.
 
 
 \begin{fact}\label{fct:active_period}
-	Given a set of extra preempting tasks $\mathpzc{E}_i$ of task $\tau_i$ and a job $\iota_{i,k}$ experiencing the properties for an optimal instant, let $\vec{\eta^{\prime}} \in \mathpzc{H}_i(\mathpzc{E}_i)$ be the vector of preemptions that leads to the shortest hold time for $\iota_{i,k}$, i.e. $h(\vec{\eta^{\prime}}) = \min\limits_{\vec{\eta} \in \mathpzc{H}_i(\mathpzc{E}_i)}\{h(\vec{\eta})\}$. The shortest response time of $\iota_{i,k}$ is not necessarily found when such a job has a vector of preemptions $\vec{\eta^{\prime}}$. Therefore, it may hold that $R_{i,k}(\vec{\eta})<R_{i,k}(\vec{\eta^{\prime}})$ for $\vec{\eta} \in \mathpzc{H}_i(\mathpzc{E}_i)$ and $\vec{\eta} \neq \vec{\eta^{\prime}}$.
+	Given a set of extra preempting tasks $\mathpzc{E}_i$ of task $\tau_i$ and a job $\iota_{i,k}$ experiencing the properties for an optimal instant, let $\vec{\eta^{\prime}} \in \mathpzc{H}_i(\mathpzc{E}_i)$ be the vector of preemptions that leads to the shortest hold time for $\iota_{i,k}$, i.e. $h_i(\vec{\eta^{\prime}}) = \min\limits_{\vec{\eta} \in \mathpzc{H}_i(\mathpzc{E}_i)}\{h_i(\vec{\eta})\}$. The shortest response time of $\iota_{i,k}$ is not necessarily found when such a job has a vector of preemptions $\vec{\eta^{\prime}}$. Therefore, it may hold that $R_{i,k}(\vec{\eta})<R_{i,k}(\vec{\eta^{\prime}})$ for $\vec{\eta} \in \mathpzc{H}_i(\mathpzc{E}_i)$ and $\vec{\eta} \neq \vec{\eta^{\prime}}$.
 \end{fact}
 
 
@@ -339,7 +339,7 @@ An important property in the best-case analysis for FPPS and arbitrary deadlines
 
 According to Theorem \ref{thm:lower_prio_tasks}, lower priority tasks have no influence on the best-case response time of a task $\tau_i$. Therefore, we ignore lower priority tasks in the rest of this document. In addition, we distinguish between two types of tasks that can influence the {best-case response time} of a task $\tau_i$. These types of tasks are the set $\mathpzc{P_i}$ of \textit{preempting} tasks in $\{\tau_p \in \mathpzc{T} | \pi_p>\theta_i\}$, and the set $\mathpzc{D_i}$ of \textit{delaying} tasks given by Fact \ref{fct:delaying_tasks}. We termed the latter type as {delaying} tasks because they cannot preempt $\tau_i$ but at most can delay its start time. Furthermore, Fact \ref{cor:shortest_hold_time} shows that a job $\iota_{i,k^{\rm{br}}}$ of task $\tau_i$ that assumes the best-case response time does not necessarily have the shortest hold time. Instead, some preempting tasks may give rise to more preemptions in $\iota_{i,k^{\rm{br}}}$. Note that this is the case for the first job of $\tau_4$ starting at time $t=0$ in Figure \ref{fig:example_3}. This job assumes the best-case response time; however, it experiences a preemption from $\tau_2$. Based on this observation, we divide the set $\mathpzc{P_i}$ of preempting tasks of $\tau_i$  into the set of preempting tasks that give rise to \textit{extra preemptions} denoted as $\mathpzc{E_i} \subseteq \mathpzc{P_i}$, and the remaining preempting tasks that we call \textit{minimal preempting} tasks in the set $\mathpzc{M_i}=\mathpzc{P_i}\backslash\mathpzc{E_i}$.
 
-\subsection{Properties for an optimal instant}
+\subsection{Properties for an optimal instant} \label{sec:properties_optimal_instant}
 
 We now formulate some properties for an optimal instant for FPTS based on the tasks influencing the best-case response time of a task $\tau_i$.
 
@@ -517,43 +517,48 @@ The outer $\min$ and superscript $(+)$ operator in Equation (\ref{eqn:activation
 \end{align}
 
 
-\section{Determining the preemption vectors of a job}\label{sec:hold_times_of_a_job}
-\iffalse
+\section{Determining the preemption vectors of a job}\label{sec:preemption_vectors_of_a_job}
 From Corollary \ref{cor:activation_delay_formula}, we have to determine first the preemption vector of a job that assumes the best-case response time in order to determine the activation delays of its extra preempting tasks and subsequently construct an optimal instant. Note that this job does not necessarily has a preemption vector that leads to the shortest hold time (Fact \ref{cor:shortest_hold_time}). Hence, we propose to explore all possible preemption vectors of a job experiencing an optimal instant in order to determine the one that leads to the best-case response time.
 
-In this section, we first show how to determine the maximum and minimum possible preemption vectors of a job given a set of extra preempting tasks. In case these vectors result to be different, we compute the preemption vectors falling in between.
+In this section, we first show how to determine the largest and shortest preemption vectors of a job given a set of extra preempting tasks. In case these vectors differ, we compute the preemption vectors falling in between.
 
-\subsection{Maximum and minimum preemption vectors}
-First, note that the hold time of a job is only influenced by the amount of preemptions that it experiences by its extra and minimal preempting tasks. Therefore, we derive all the possible hold times given a set of extra preempting tasks. To this end, we first introduce the notions of maximal, minimal and best-case hold intervals.
+\subsection{Upper and lower bounds for the preemption vectors}
+Clearly, a preemption vector of a job $\iota_{i,k^{\rm{opt}}}$ experiencing the properties for an optimal instant is closely related to the hold time $H_{i,k^{\rm{opt}}}$ of such a job. When $\iota_{i,k^{\rm{opt}}}$ experiences more preemptions (a larger preemption vector), its hold time will increase. Therefore, we propose to bound the hold time that such a job can assume in order to determine its corresponding preemption vectors. Furthermore, recall that the properties for an optimal instant are based on a partition of preempting tasks. Therefore, we found a bound on the hold time given a set of extra preempting tasks. To this end, we first introduce the notion of \textit{upper hold interval} to determine the hold time of a job experiencing a maximal interference by its extra preempting tasks.
 
-%\begin{definition}
-%	The \textit{maximal hold interval} $\wh^{\rm{max}}_i(y,\mathpzc{E})$ is defined as the worst-case hold time of an artificial task $\tau^{\prime}_i$ with a computation time of $y \in \mathbb{R}^+$ in the task-set $\mathpzc{E}\cup \{\tau^{\prime}_i\}$ given that all jobs in the interval assume their {best-case computation times}.
-%\end{definition}
 
 \begin{definition}
-The \textit{maximal hold interval} $\hi^{\rm{ma}}_i(y,\mathpzc{E})$ and the \textit{minimal hold interval} $\hi^{\rm{mi}}_i(y,\mathpzc{E})$ are defined as the maximal and minimal hold times of a job $\iota_{i,k}$ of an artificial task $\tau^{\prime}_i$ with a computation time $y \in \mathbb{R}^+$ when such a job $\iota_{i,k}$ experiences extra preemptions by the tasks in $\mathpzc{E}$, i.e. the tasks in  $\mathpzc{E}$ are activated just after job $\iota_{i,k}$ starts. In addition, all jobs in the interval assume their best-case computation times.
+The \textit{upper hold interval} $\hi^{\rm{up}}_i(y,\mathpzc{E}_i)$ is defined as the maximal hold time of a job $\iota_{i,k}$ of an artificial task $\tau^{\prime}_i$ with a computation time $y \in \mathbb{R}^+$ when such a job $\iota_{i,k}$ experiences extra preemptions by the tasks in $\mathpzc{E}_i$, i.e. the tasks in  $\mathpzc{E}_i$ are activated just after job $\iota_{i,k}$ starts. In addition, all jobs in the interval assume their best-case computation times.
 \end{definition}
 
-The {maximal hold interval} $\hi^{\rm{ma}}_i(y,\mathpzc{E})$ follows directly from the formula for {worst-case hold time} for FPTS given in \cite{BAHDB17}. The only difference is that best-case computation times are assumed for the {maximal hold interval}. Hence, $\hi^{\rm{ma}}_i(y,\mathpzc{E})$ is given by the smallest $x \in \mathbb{R}^+$ satisfying
-\begin{align}
-x = y + \sum\limits_{e:\pi_e > \theta_i, \tau_e \in \mathpzc{E}}\Big\lceil  \dfrac{x+ \aj_e}{T_e}\Big\rceil  BC_e.
+The {upper hold interval} $\hi^{\rm{up}}_i(y,\mathpzc{E}_i)$ follows directly from the formula for {worst-case hold time} for FPTS given in \cite{BAHDB17}. The only difference is that best-case computation times are assumed for the {maximal hold interval}. Hence, $\hi^{\rm{up}}_i(y,\mathpzc{E}_i)$ is given by the smallest $x \in \mathbb{R}^+$ satisfying
+\begin{align}\label{eqn:upper_hold_interval}
+x = y + \sum\limits_{e:\tau_e \in \mathpzc{E}_i}\Big\lceil  \dfrac{x+ \aj_e}{T_e}\Big\rceil  BC_e.
 \end{align}
+Note that the term $+AJ_e$ in the formula guarantees a maximal interference by extra preempting tasks in the hold time. Moreover, Equation (\ref{eqn:upper_hold_interval}) can be solved by an iterative procedure starting with a lower bound.
 
-Similarly, the {minimal hold interval} $\hi^{\rm{mi}}_i(y,\mathpzc{E})$ is given by the smallest $x \in \mathbb{R}^+$ satisfying
-\begin{align}
-x = y + \sum\limits_{e:\pi_e > \theta_i, \tau_e \in \mathpzc{E}}\Big\lceil  \dfrac{x- \aj_e}{T_e}\Big\rceil^{*}  BC_e,
+Similar to the notion of upper hold interval, we also introduce the \textit{lower hold interval} to express the hold time of a job when experiencing a minimal interference by its extra preempting tasks. This latter notion will serve as a basis to derive a lower bound on the hold time of a job experiencing an optimal instant.
+
+\begin{definition}
+	The \textit{lower hold interval} $\hi^{\rm{low}}_i(y,\mathpzc{E}_i)$ is defined as the minimal hold time of a job $\iota_{i,k}$ of an artificial task $\tau^{\prime}_i$ with a computation time $y \in \mathbb{R}^+$ when such a job $\iota_{i,k}$ experiences extra preemptions by the tasks in $\mathpzc{E}_i$.
+\end{definition}
+The {lower hold interval} $\hi^{\rm{low}}_i(y,\mathpzc{E}_i)$ is given by the smallest $x \in \mathbb{R}^+$ satisfying
+\begin{align} \label{eqn:lower_hold_interval}
+x = y + \sum\limits_{e:\tau_e \in \mathpzc{E}_i}\Big\lceil  \dfrac{x- \aj_e}{T_e}\Big\rceil^{*}  BC_e,
 \end{align}
-where the notation $w^*$ stands for $\max(w,1)$.
+where the notation $w^*$ stands for $\max(w,1)$. Note that the term $-AJ_e$ in the formula guarantees a minimal interference by extra preempting tasks in the hold time. Furthermore, the superscript $(*)$ is added to guarantee that every extra preempting task preempts the job under consideration at least once. Equation (\ref{eqn:lower_hold_interval}) can be solved by an iterative procedure starting with a lower bound.
+
+So far, we have introduced notions to determine the hold time of a job based on the maximal and minimal interference by extra preempting tasks. It only remains to consider the influence that minimal preempting tasks induce on such a hold time. Observe that, in contrast with extra preempting tasks, the influence of minimal preempting tasks in the hold time of a job experiencing an optimal instant is always minimal. Hence, we introduce the following notion.
 
 \begin{definition} \label{def:best_case_interval}
-	The \textit{best-case hold interval} $\bh_i(y,\mathpzc{M})$ is defined as the best-case hold time of an artificial task $\tau^{\prime}_i$ with a computation time of $y \in \mathbb{R}^+$ in the task-set $\mathpzc{M}\cup \{\tau^{\prime}_i\}$ given that $\mathpzc{M}$ contains only preempting tasks.
+	The \textit{minimal hold interval} $\hi^{\rm{min}}_i(y,\mathpzc{E}_i)$ is defined as the minimal hold time of a job $\iota_{i,k}$ of an artificial task $\tau^{\prime}_i$ with a computation time $y \in \mathbb{R}^+$ when such a job $\iota_{i,k}$ experiences minimal preemptions by the tasks in $\mathpzc{M}_i$.
 \end{definition}
 
-Since Definition \ref{def:best_case_interval} assumes that $\mathpzc{M}$ only contains preempting tasks, we can use the same formula for the best-case hold time for FPPS given in \cite{BFV08}\footnote{In \cite{BFV08}, the term best-case hold time is referred as best-case execution time.} to calculate $\bh_i(y,\mathpzc{M})$. Hence, function $\bh_i(y,\mathpzc{M})$ returns the largest positive solution of $x \in \mathbb{R}^+$ satisfying
+Since $\mathpzc{M}_i$ only contains preempting tasks, we can use the same formula for the best-case hold time for FPPS given in \cite{BFV08}\footnote{In \cite{BFV08}, the term best-case hold time is referred as best-case execution time.} to calculate $\hi^{\rm{min}}_i(y,\mathpzc{M}_i)$. Hence, function $\hi^{\rm{min}}_i(y,\mathpzc{M}_i)$ returns the largest positive solution of $x \in \mathbb{R}^+$ satisfying
 \begin{align} \label{eqn:best_case_hold_interval}
-x = y + \sum\limits_{m:\pi_m > \theta_i, \tau_m \in \mathpzc{M}} \Big( \Big\lceil  \dfrac{x-\aj_m}{T_m}\Big\rceil -1 \Big)^+  BC_m.
-\end{align}
+x = y + \sum\limits_{m:\tau_m \in \mathpzc{M}} \Big( \Big\lceil  \dfrac{x-\aj_m}{T_m}\Big\rceil -1 \Big)^+  BC_m.
+\end{align}.
 
+-----------------------------------------------------------------------------------------------
 
 Finally, we introduce the set of hold times of a task $\tau_i$ based on its extra and minimal preempting tasks.
 
@@ -684,7 +689,6 @@ As an example, consider again the set of tasks $\mathpzc{T}_\ref{tab:ex_hold_tim
 	\label{fig:intermediate_hold_time}
 \end{figure}
 
-\fi
 \iftrue
 \section{Exact best-case response time analysis}
 In this chapter, we present and prove a novel exact best-case response time analysis for independent real-time periodic tasks with arbitrary deadlines scheduled using FPTS. Our analysis is based on the properties for an optimal instant presented in Theorem \ref{thm:optimal_instant_fpts}. More precisely, we first partition the set of preempting tasks into the sets of extra and minimal preempting tasks. For each set of extra preempting tasks of a task $\tau_i$, we determine the preemption vector $\vec{\eta}$ of a job $\iota_{i,k^{\rm{opt}}}$ that experiences the properties for an optimal instant and subsequently derive its shortest response time. Afterwards, the best-case response time is simply determined by the minimum of all shortest response times for all partitions of preempting tasks.
@@ -703,7 +707,7 @@ Note that $GI_i(y, \vec{\eta},  \mathpzc{E_i})$ is similar to the notion of {bes
 	The \textit{generalized best-case interval} $GI_i(y, \vec{\eta},  \mathpzc{E_i})$ is given by the largest $x \in \mathbb{R}^+$ satisfying
 	\begin{align} \label{eq:g_best_interval}
 	\begin{split}
-	x = &y + \sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{x-\alpha_m(\vec{\eta})}{T_m}\Big\rceil -1 \Big)^+  BC_m + \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{x-h(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon+ \beta_E(\vec{\eta})
+	x = &y + \sum\limits_{m:\tau_m \in \mathpzc{M_i}} \Big( \Big\lceil  \dfrac{x-\alpha_m(\vec{\eta})}{T_m}\Big\rceil -1 \Big)^+  BC_m + \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{x-h_i(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon+ \beta_E(\vec{\eta})
 	\end{split} 
 		\end{align}
 	where $\beta_E$ is the amount of time that extra preempting tasks preempts to $\iota_{i,k}$, i.e. $\beta_E(\vec{\eta}) = \sum\limits_{e:\tau_e \in \mathpzc{E}_i} \eta_e \cdot \bc_e$. Furthermore, $\alpha_j(\vec{\eta})$ is a shorthand notation for $\alpha_j(\vec{\eta},0)$.
@@ -717,25 +721,25 @@ Note that $GI_i(y, \vec{\eta},  \mathpzc{E_i})$ is similar to the notion of {bes
 	This corresponds to the second term in Equation (\ref{eq:g_best_interval}).
 	
 	
-	Note that Definition \ref{def:gen_best_interval} assumes that a job $\iota_{i,k}$ of task $\tau_i$ with a preemption vector $\vec{\eta}$ executes at the end of $[t_s,t_e)$, i.e. $f_{i,k}=t_e$ and $s_{i,k} = t_e - h(\vec{\eta})$. The amount of time reserved for extra preempting tasks in the interval $[s_{i,k},t_e)$ of size $h(\vec{\eta})$ is given by the number of extra preempting jobs that execute in such an interval; hence, it is given by $\beta_E(\vec{\eta})$. This corresponds to the last term in the RHS of Equation (\ref{eq:g_best_interval}). On the other hand, delaying tasks cannot preempt $\tau_i$; hence, there is no time reserved for delaying tasks in $[s_{i,k},t_e)$. It only remains to determine the amount of interference by extra preempting and delaying tasks in the interval $[t_s,s_{i,k})$.
+	Note that Definition \ref{def:gen_best_interval} assumes that a job $\iota_{i,k}$ of task $\tau_i$ with a preemption vector $\vec{\eta}$ executes at the end of $[t_s,t_e)$, i.e. $f_{i,k}=t_e$ and $s_{i,k} = t_e - h_i(\vec{\eta})$. The amount of time reserved for extra preempting tasks in the interval $[s_{i,k},t_e)$ of size $h_i(\vec{\eta})$ is given by the number of extra preempting jobs that execute in such an interval; hence, it is given by $\beta_E(\vec{\eta})$. This corresponds to the last term in the RHS of Equation (\ref{eq:g_best_interval}). On the other hand, delaying tasks cannot preempt $\tau_i$; hence, there is no time reserved for delaying tasks in $[s_{i,k},t_e)$. It only remains to determine the amount of interference by extra preempting and delaying tasks in the interval $[t_s,s_{i,k})$.
 	
 	
 	From the properties for an optimal instant given in Theorem \ref{thm:optimal_instant_fpts}, a simultaneous activation of delaying and extra preempting tasks occurs at time $t= s_{i,k}+\Delta$. Furthermore, the activation delay of delaying and extra preempting tasks at that time has to be maximal while preserving the preemption vector $\vec{\eta}$ for $\iota_{i,k}$, i.e. the activation delay of a task $\tau_{\epsilon}\in \mathpzc{E}_i \cup \mathpzc{D}_i$ is given by $\alpha_\epsilon(\vec{\eta},\Delta)$. Note that delaying tasks activated before $s_{i,k}$ have to be completed before $s_{i,k}$ as well. If not, job $\iota_{i,k}$ would not be able to start at that time. Hence, all jobs of delaying tasks activated in the interval $[t_s,s_{i,k})$ will give rise to interference in such an interval. The amount of processing time spent on the execution of delaying and extra preempting tasks in $[t_s,s_{i,k})$ is therefore given by
 	\begin{align*}
 	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{(s_{i,k}+\Delta)-t_s-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{t_e -h(\vec{\eta})+\Delta-t_s-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta- \alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{t_e -h_i(\vec{\eta})+\Delta-t_s-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon = \\
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h_i(\vec{\eta})+\Delta- \alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
 	\end{align*}
 	Given Lemma \ref{lemma:auxilary1} in the Appendix, when $\Delta$ approaches zero the equation is simplified as follows.
 	\begin{align*}
-	\lim \limits_{\Delta \downarrow 0} & \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
+	\lim \limits_{\Delta \downarrow 0} & \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h_i(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
 	= \\
-	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \lim \limits_{\Delta \downarrow 0}  \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
+	&\sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big( \lim \limits_{\Delta \downarrow 0}  \Big\lceil  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h_i(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rceil -1 \Big)^+  BC_\epsilon 
 	= \\
 	& \{ \text{Lemma \ref{lemma:auxilary1}} \} \\ 
-	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor \lim \limits_{\Delta \downarrow 0}  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rfloor^+  BC_\epsilon
+	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor \lim \limits_{\Delta \downarrow 0}  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h_i(\vec{\eta})+\Delta-\alpha_\epsilon(\vec{\eta},\Delta)}{T_\epsilon}\Big\rfloor^+  BC_\epsilon
 	= \\
-	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon.
+	& \sum\limits_{\epsilon:\tau_{\epsilon} \in \mathpzc{E_i} \cup \mathpzc{D_i}} \Big\lfloor  \dfrac{GI_i(y, \vec{\eta},  \mathpzc{E_i})-h_i(\vec{\eta})-\alpha_\epsilon(\vec{\eta})}{T_\epsilon}\Big\rfloor^+  BC_\epsilon.
 	\end{align*}
 	This corresponds to the third term in Equation (\ref{eq:g_best_interval}).
 \end{proof}
